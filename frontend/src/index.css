@@ -1,0 +1,151 @@
+main {
+  min-height: 80vh;
+}
+.addLine{
+  
+  border-bottom: 2px solid #2c3e50 !important ;
+}
+.centerMe{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+}
+.logo{
+  font-size:27px !important;
+  transform: scale(.8, 1.6);
+  font-weight:bold;
+ margin-left: 25px;
+ background-image: -webkit-image-set();
+ font-family: Garamond, serif;
+}
+
+.abonnement{
+  display: flex;
+  margin-left: auto;
+  margin-right: 25px;
+  color: white;  
+}
+@media(max-width:990px){
+  .nav-link{
+   margin-left: 10px;  
+  }
+  .navbar-nav {
+    background-image: linear-gradient(#378dfc,#b8d5fa) ;
+  }
+  .abonnement{
+   
+    margin-right: 0;
+    display: block;
+  }
+}
+.abb:hover{
+  color: rgb(218, 218, 124);
+}
+
+.abb{
+  margin-right: 15px;
+  color: white;  
+}
+
+.footer{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-image: url("../public//images/car-rental.jpg");
+  background-size: cover;
+  color: white;
+  text-align: center;
+  }
+  
+  .footer p:not(.copy-right){
+          margin: 10px auto;
+          padding: 15px;
+          text-transform: uppercase;
+          font-size: 24px;
+          border-bottom: 2px solid black;
+          width: fit-content;
+  }
+  .footer .socials-icones i{
+      padding: 15px 15px;
+      font-size: 27px;
+      color:black;
+  }
+  .footer .copy-right{
+      margin-top: 10px;
+  }
+  .footer .copy-right span{
+  font-weight: bold;
+  color: #07437e ;
+  }
+  .logoFOT{
+    font-size:40px !important;
+    transform: scale(.8, 1.6);
+    color:#07437e  !important ;
+    font-weight:bold;
+    font-family: 'Open Sans', sans-serif ;
+   background-image: -webkit-image-set();
+ }
+ .image:hover{
+  transform: scale(1.1) ;
+transition: 0.5s;
+}
+ .description{
+  height: 95px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4; 
+  line-height: 1.4em;        
+  max-height: 1.5*2; 
+  }
+ 
+.recomm{
+  height: 40px;
+  font-weight: bold;
+  border-bottom: 2px solid black ;
+  color: black ;
+  margin-left: 0 !important;
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 991px){
+  
+  .myCarousel,.titreNewstoday, .imageCarousel{
+    height: 341px !important;
+  }
+.carousel-caption h2{
+  font-size: 25px;
+}
+
+}
+  
+/* Media Query for Laptops and Desktops */
+@media (min-width: 992px) and (max-width: 1199px){
+ 
+  .myCarousel, .imageCarousel{
+    height: 410px !important;
+  }
+
+}
+.imageCarousel{
+  height: 480px;
+  width: 1000px;
+}
+.specialOff{
+  background-color: rgb(252, 252, 136);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.myDivSearch{
+  margin-top: 35px;
+display: flex;
+justify-content: space-between;
+border-bottom: 2px solid #2c3e50;
+flex-direction: row;
+flex-wrap: wrap;
+}
+
+
