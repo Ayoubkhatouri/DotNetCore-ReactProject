@@ -82,10 +82,89 @@ const isOffreSpecial=async(id)=>{
            Authorization:`Bearer ${userLogin.token}`
        }
    }
+   console.log(car)
 
-   await axios.put(`/api/Voiture/${car._id}`,car,config)
+   await axios.put(`/api/Voiture/${car.id}`,car,config)
 }
 
+ //delete car
+ const deleteCar=async(id,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+   
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+   await axios.delete(`/api/Voiture/${id}`,config)
+}
+
+// add Marque
+const addMarque=async(nomMarque,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+   
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+   await axios.post(`/api/Marque`,nomMarque,config)
+}
+
+// add Model
+const addModele=async(marqueIdAndNomModel,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+   
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+   await axios.post(`/api/Modele`,marqueIdAndNomModel,config)
+}
+
+ //update offre
+ const updateOffre=async(carIdAndOffrePrice,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+
+   await axios.put(`/api/Offre/${carIdAndOffrePrice.voitureId}`,carIdAndOffrePrice,config)
+}
+
+ //delete Offre Special
+ const deleteOffre=async(id,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+   
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+   await axios.delete(`/api/Offre/${id}`,config)
+}
+
+// add Offre
+const addOffre=async(carIdAndOffrePrice,thunkAPI)=>{
+   const state=thunkAPI.getState()
+   const userLogin=state.user.userLogin
+   
+   const config={
+       headers:{
+           Authorization:`Bearer ${userLogin.token}`
+       }
+   }
+   await axios.post(`/api/Offre`,carIdAndOffrePrice,config)
+}
 
 
 
@@ -100,7 +179,14 @@ const isOffreSpecial=async(id)=>{
     allCarsOfUser,
     allOffresSpecial,
     isOffreSpecial,
-    updateCar  
+    updateCar  ,
+    deleteCar,
+    addMarque,
+    addModele,
+    updateOffre,
+    deleteOffre,
+    addOffre,
+    
  }
 
  export default carService

@@ -1,15 +1,25 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import {  useNavigate } from 'react-router-dom'
 import { Navbar,Nav,Container,NavDropdown } from 'react-bootstrap'
 import { LinkContainer} from 'react-router-bootstrap'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
+import { getUserDetails } from '../features/user/userSlice'
 
 const Header = () => {
    
   const navigate=useNavigate()
+  const dispatch=useDispatch()
 
   const user=useSelector(state=>state.user)
   const {userLogin}=user
+
+  const {LoadingUserDetails,ErrorUserDetails,userDetails}=user.UserDetailsInfo
+
+  
+  useEffect(()=>{
+    if(userLogin)
+    dispatch(getUserDetails(userLogin.userId))
+},[dispatch,userLogin])
 
   const logoutHandler=()=>{
     localStorage.removeItem('userLogin')
@@ -35,14 +45,35 @@ const Header = () => {
                 <LinkContainer to={`users/profile`} >
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>
-                {userLogin && userLogin.roles && userLogin.roles.includes("Proprietaire") &&  (
+                <LinkContainer to={`users/VoituresFavories`} >
+                  <NavDropdown.Item>Voitures Favories</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to={`users/demandes`} >
+                  <NavDropdown.Item>Demandes</NavDropdown.Item>
+                </LinkContainer>
+                {((userLogin && userLogin.roles && userLogin.roles.includes("Proprietaire")) || userDetails.isAgence)&&  (
                   <>
                 <LinkContainer to='/voiture/ajouterVoiture'>
                  <NavDropdown.Item>Ajouter Voiture</NavDropdown.Item>
                </LinkContainer>
                  <LinkContainer to='/voiture/Voitures'>
                  <NavDropdown.Item>Voitures</NavDropdown.Item>
-               </LinkContainer>
+                 </LinkContainer>
+                 <LinkContainer to='/voiture/Voitures/offreSpecial'>
+                 <NavDropdown.Item>Gestion Offres Special</NavDropdown.Item>
+                 </LinkContainer>
+                 
+                 {userLogin && userLogin.roles && userLogin.roles.includes("Admin") && (
+                  <>
+                  <LinkContainer to='/users/all'>
+                   <NavDropdown.Item>Utilisateurs</NavDropdown.Item>
+                 </LinkContainer>
+                   <LinkContainer to='admin/marqueModel'>
+                   <NavDropdown.Item>Gestion Mraques/Modeles</NavDropdown.Item>
+                  </LinkContainer>
+                  </>
+                 )}
+            
                </>
                )}
                 </NavDropdown>

@@ -18,8 +18,17 @@ const LoginScreen = () => {
     const {isError,isSuccess,isLoading,message,userLogin}=useSelector(state=>state.user)
 
     useEffect(()=>{
-        if(isSuccess || userLogin)
-        navigate('/')
+        if(isSuccess || userLogin){
+          if(userLogin && userLogin.roles.includes("BlackListed")){
+            localStorage.removeItem('userLogin')
+            alert("Votre compte est desactivez pour le momoment")
+            navigate('/')
+            window.location.reload()
+          }
+        else
+          navigate('/')
+        }
+       
        
     },[dispatch,isSuccess,userLogin,navigate])
   
@@ -39,7 +48,7 @@ const LoginScreen = () => {
     <FormContainer>
     <h1 className='addLine mb-5 mt-3'>Abonnez Vous</h1>
     {isError && <Message variant='danger'>{message}</Message>}
-    
+
     <Form onSubmit={submitHandler}>
         <Form.Group controlId='email'>
             <Form.Label>Adresse Email</Form.Label>

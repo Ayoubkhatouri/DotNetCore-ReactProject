@@ -72,6 +72,51 @@ const initialState={
         isOffreSpecialSucces:false,
         isOffreSpecialMessageError:'',
     },
+    deleteCarInfo:{
+        Loadingdelete:false,
+        Errordelete:false,
+        messagedelete:'',
+        Successdelete:false
+    },
+    updateCarInfo:{
+        NewCar:{},
+        Loadingupdate:false,
+        Errorupdate:false,
+        messageupdate:'',
+        Successupdate:false,
+    },
+    AddMarqueInfo:{
+        LoadingAddMarque:false,
+        ErrorAddMarque:false,
+        messageAddMarque:'',
+        SuccessAddMarque:false
+    },
+    AddModeleInfo:{
+        LoadingAddModele:false,
+        ErrorAddModele:false,
+        messageAddModele:'',
+        SuccessAddModele:false
+    },
+    updateOffreInfo:{
+        NewOffre:{},
+        Loadingupdate:false,
+        Errorupdate:false,
+        messageupdate:'',
+        Successupdate:false,
+    },
+    deleteOffreInfo:{
+        Loadingdelete:false,
+        Errordelete:false,
+        messagedelete:'',
+        Successdelete:false
+    },
+    AddOffreInfo:{
+        LoadingAddOffre:false,
+        ErrorAddOffre:false,
+        messageAddOffre:'',
+        SuccessAddOffre:false
+    },
+  
 
 }
 
@@ -197,6 +242,74 @@ export const updateCar=createAsyncThunk('car/update',async(car,thunkAPI)=>{
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+//delete a car
+export const deleteCar=createAsyncThunk("/car/delete",async(id,thunkAPI)=>{
+    try {
+        await carService.deleteCar(id,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//add a marque
+export const addMarque=createAsyncThunk("/marque/add",async(nomMarque,thunkAPI)=>{
+    try {
+        await carService.addMarque(nomMarque,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//add a modele
+export const addModele=createAsyncThunk("/modele/add",async(marqueIdAndNomModel,thunkAPI)=>{
+    try {
+        await carService.addModele(marqueIdAndNomModel,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//update an Offre
+export const updateOffre=createAsyncThunk('offre/update',async(carIdAndOffrePrice,thunkAPI)=>{
+    try {
+        await carService.updateOffre(carIdAndOffrePrice,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//delete offre Special
+export const deleteOffre=createAsyncThunk("/offre/delete",async(id,thunkAPI)=>{
+    try {
+        await carService.deleteOffre(id,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//add offre
+export const addOffre=createAsyncThunk("/offre/add",async(carIdAndOffrePrice,thunkAPI)=>{
+    try {
+        await carService.addOffre(carIdAndOffrePrice,thunkAPI)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
 
 export const carSlice=createSlice({
     name:'car',
@@ -381,8 +494,107 @@ export const carSlice=createSlice({
                 state.isOffreSpecialInfo.isOffreSpecialError=true
                 state.isOffreSpecialInfo.isOffreSpecialMessageError=action.payload 
             })
+            
+            .addCase(deleteCar.pending,(state)=>{
+                state.deleteCarInfo.Loadingdelete=true
+            })
+                .addCase(deleteCar.fulfilled,(state,action)=>{
+                state.deleteCarInfo.Loadingdelete=false
+                state.deleteCarInfo.Successdelete= true 
+            
+            })
+                .addCase(deleteCar.rejected,(state,action)=>{
+                    state.deleteCarInfo.Loadingdelete=false
+                    state.deleteCarInfo.Errordelete= true  
+                    state.deleteCarInfo.messagedelete=action.payload   
+            })
+            
+        .addCase(updateCar.pending,(state)=>{
+            state.updateCarInfo.Loadingupdate=true
+        })
+            .addCase(updateCar.fulfilled,(state,action)=>{
+            state.updateCarInfo.Loadingupdate=false
+            state.updateCarInfo.Successupdate= true 
+        
+        })
+            .addCase(updateCar.rejected,(state,action)=>{
+                state.updateCarInfo.Loadingupdate=false
+                state.updateCarInfo.Errorupdate= true  
+                state.updateCarInfo.messageupdate=action.payload   
+        })
+        
+///////////////////////////////
+.addCase(addMarque.pending,(state)=>{
+    state.AddMarqueInfo.LoadingAddMarque=true
+})
+    .addCase(addMarque.fulfilled,(state,action)=>{
+    state.AddMarqueInfo.LoadingAddMarque=false
+    state.AddMarqueInfo.SuccessAddMarque= true       
+})
+    .addCase(addMarque.rejected,(state,action)=>{
+        state.AddMarqueInfo.LoadingAddMarque=false
+        state.AddMarqueInfo.ErrorAddMarque= true  
+        state.AddMarqueInfo.messageAddMarque=action.payload 
+})
+   ///////////////////////////////
+.addCase(addModele.pending,(state)=>{
+    state.AddModeleInfo.LoadingAddModele=true
+})
+    .addCase(addModele.fulfilled,(state,action)=>{
+    state.AddModeleInfo.LoadingAddModele=false
+    state.AddModeleInfo.SuccessAddModele= true       
+})
+    .addCase(addModele.rejected,(state,action)=>{
+        state.AddModeleInfo.LoadingAddModele=false
+        state.AddModeleInfo.ErrorAddModele= true  
+        state.AddModeleInfo.messageAddModele=action.payload 
+})
 
-    
+/////////////////////////////////
+.addCase(updateOffre.pending,(state)=>{
+    state.updateOffreInfo.Loadingupdate=true
+})
+    .addCase(updateOffre.fulfilled,(state,action)=>{
+    state.updateOffreInfo.Loadingupdate=false
+    state.updateOffreInfo.Successupdate= true 
+
+})
+    .addCase(updateOffre.rejected,(state,action)=>{
+        state.updateOffreInfo.Loadingupdate=false
+        state.updateOffreInfo.Errorupdate= true  
+        state.updateOffreInfo.messageupdate=action.payload   
+})
+///////////////////////////////
+.addCase(deleteOffre.pending,(state)=>{
+    state.deleteOffreInfo.Loadingdelete=true
+})
+    .addCase(deleteOffre.fulfilled,(state,action)=>{
+    state.deleteOffreInfo.Loadingdelete=false
+    state.deleteOffreInfo.Successdelete= true 
+
+})
+    .addCase(deleteOffre.rejected,(state,action)=>{
+        state.deleteOffreInfo.Loadingdelete=false
+        state.deleteOffreInfo.Errordelete= true  
+        state.deleteOffreInfo.messagedelete=action.payload   
+})
+/////////////////////////
+.addCase(addOffre.pending,(state)=>{
+    state.AddOffreInfo.LoadingAddOffre=true
+})
+    .addCase(addOffre.fulfilled,(state,action)=>{
+    state.AddOffreInfo.LoadingAddOffre=false
+    state.AddOffreInfo.SuccessAddOffre= true       
+})
+    .addCase(addOffre.rejected,(state,action)=>{
+        state.AddOffreInfo.LoadingAddOffre=false
+        state.AddOffreInfo.ErrorAddOffre= true  
+        state.AddOffreInfo.messageAddOffre=action.payload 
+})
+
+
+
+
 }
 })
 

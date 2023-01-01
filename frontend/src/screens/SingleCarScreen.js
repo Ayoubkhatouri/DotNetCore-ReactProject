@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Rating from '../components/Rating'
-import { getAllUsers } from '../features/user/userSlice'
+import { getAllUsers, addFavorite,getFavoriteUser,deleteFavorite  } from '../features/user/userSlice'
 import { Row, Col, Image, ListGroup, Form, Button } from 'react-bootstrap'
 import DonutChart from '../components/DonutChart'
 import SingleCar from '../components/SingleCar'
-import {reset4,allOffresSpecial,isOffreSpecial, listSingleCar, getallMarque, getallModele,allCarsOfUser } from '../features/car/carSlice'
-
+import {reset4,allOffresSpecial,isOffreSpecial, listSingleCar, getallMarque, getallModele,allCarsOfUser} from '../features/car/carSlice'
+import { addDemande } from '../features/demande/demandeSlice'
 
 
 const SingleCarScreen = () => {
@@ -17,6 +17,11 @@ const SingleCarScreen = () => {
   const navigate = useNavigate()
   const params = useParams()
   const dispatch = useDispatch()
+
+  const [ajouterDemande,setAjouterDemande]=useState(false)
+  const [dateDebut,setDateDebut]=useState('')
+  const [dateFin,setDateFin]=useState('')
+  const [prixTotal,setPrixTotal]=useState('')
 
   const { singleCarError, singleCarLoading, singleCarSucces, singleCarMessageError, singleCar } = useSelector(state => state.car.singleCarInfo)
 
@@ -30,7 +35,7 @@ const SingleCarScreen = () => {
 
   const user = useSelector(state => state.user)
   const { isLoadingAllUsers, isErrorAllUsers, messageAllUsers, AllUsers } = user.AllUsersInfo
-
+  const {userLogin}=user
   
   const allOffresSpecialInfo=useSelector(state=>state.car.allOffresSpecialInfo)
   const {allCarsOffreSpecialLoading,allCarsOffreSpecialSucces,allCarsOffreSpecialError,allCarsOffreSpecialMessageError,allCarsOffreSpecial}=allOffresSpecialInfo
@@ -38,8 +43,16 @@ const SingleCarScreen = () => {
    
   const isOffreSpecialInfo=useSelector(state=>state.car.isOffreSpecialInfo)
   const {isOffreSpecialLoading,isOffreSpecialSucces,isOffreSpecialError,isOffreSpecialMessageError,isOffreSpecialdata}=isOffreSpecialInfo
-   
+  
+  const {isLoadingAllUserFavorite,isSuccessAllUserFavorite,isErrorAllUserFavorite,messageAllUserFavorite,AllUserFavorite}=user.AllUserFavoriteInfo
+  
+  
+
+ let CarsOfUserExceptTheClicked=CarsOfUser.filter(c=>c.voitureId !=params.id)
+
+ const [isFavori,setIsFavori]=useState(AllUserFavorite.some((c)=>c.voitureId===singleCar.voitureId))
  
+
   let mycar
   if(isOffreSpecialdata){
     mycar=allCarsOffreSpecial.filter(({voiture})=>voiture.voitureId===singleCar.voitureId)
@@ -54,12 +67,10 @@ const SingleCarScreen = () => {
     dispatch(getAllUsers())
     dispatch(allOffresSpecial())
     dispatch(isOffreSpecial(singleCar.voitureId))
+    if(userLogin && userLogin.userId)
+        dispatch(getFavoriteUser(userLogin.userId))
   
-  }, [params.id, dispatch,singleCar.proprietaireId,singleCar.voitureId])
-
-
-
-
+  }, [params.id, dispatch,singleCar.proprietaireId,singleCar.voitureId,userLogin && userLogin.userId])
 
 
 
@@ -77,6 +88,41 @@ const SingleCarScreen = () => {
    else path=singleCar.imagePath
 
 
+   const HandleAddCommande=({singleCar,dateDebut,dateFin,prixTotal})=>{
+  dispatch( addDemande({
+  locataireId:userLogin.userId,
+  voitureId:singleCar.voitureId,
+  dateDebut,
+  dateFin,
+  prixTotal,
+  statut:"en attente"
+}))
+alert("Votre demande est envoyé avec succes")
+
+   }
+
+   const handleClick=(car)=>{
+    if(!userLogin || !userLogin.userId){
+        alert("SVP abonnez vous ")
+        navigate('/users/abonnez')
+    }
+    else{
+    
+        setIsFavori(!isFavori)
+    if(!isFavori)
+    dispatch(addFavorite({
+        userId:userLogin.userId,
+        voitureId:car.voitureId
+    }))
+  
+    else 
+        dispatch(deleteFavorite({
+            userId:userLogin.userId,
+            voitureId:car.voitureId
+        }))
+     
+}
+ }
 
   if (singleCarLoading)
     return <Loader />
@@ -86,7 +132,7 @@ const SingleCarScreen = () => {
     <>
       {singleCarError ? <Message variant="danger">{singleCarMessageError}</Message> : (
         <> 
-        <div className='myDivSearch mt-3'>
+        <div className='myDivSearch addLine mt-3'>
            <h1 >{marques && marques.length &&  singleCar.marqueId && marques.find(({ marqueId }) => marqueId === singleCar.marqueId).nomMarque}
             {" "}  {models && models.length  && singleCar.modeleId && models.find(({ modeleId }) => modeleId === singleCar.modeleId).nomModel}</h1>
             <div style={{fontSize:'30px'}}>
@@ -108,6 +154,12 @@ const SingleCarScreen = () => {
             </Col>
             <Col className='mt-3'  sm={12} md={3} lg={4} xl={4}>
       <h3 className='addLine'>Informations</h3>
+      <Button className='help' onClick={()=>handleClick(singleCar)}>
+            <>{isFavori? 
+            <h5><i className="fa-solid fa-bookmark"></i></h5>  :
+        <h5><i className="fa-regular fa-bookmark"></i></h5>
+        }</>
+        </Button >
       <ListGroup variant='flush'>
                         <ListGroup.Item>
                         <h5 ><strong>Proprietaire:  </strong> { AllUsers.length && singleCar.proprietaireId  && AllUsers.find(({id})=>id===singleCar.proprietaireId).nom } { AllUsers.length && singleCar.proprietaireId && AllUsers.find(({id})=>id===singleCar.proprietaireId).prenom }</h5>
@@ -139,15 +191,35 @@ const SingleCarScreen = () => {
                        
                         </ListGroup.Item>
                         <ListGroup.Item>
-                        <Button  className='btn btn-success mt-3'>Demander</Button>
+                        <Button  className='btn btn-success mt-3' onClick={()=>setAjouterDemande(!ajouterDemande)}>Demander</Button>
                         </ListGroup.Item>
+                        {ajouterDemande &&<>
+                        <ListGroup.Item>
+                        <Form.Control className='mt-2'  placeholder='Date de Debut' value={dateDebut}
+                          onChange={(e)=>setDateDebut(e.target.value)}> 
+                          </Form.Control>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                        <Form.Control className='mt-2'  placeholder='Date de Fin' value={dateFin}
+                          onChange={(e)=>setDateFin(e.target.value)}> 
+                          </Form.Control>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                        <Form.Control className='mt-2'  placeholder='Prix total' value={prixTotal}
+                          onChange={(e)=>setPrixTotal(e.target.value)}> 
+                          </Form.Control>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                        <Button  variant='primary' className='mt-3' onClick={()=>HandleAddCommande({singleCar,dateDebut,dateFin,prixTotal})}>Confirmer</Button>
+                        </ListGroup.Item>
+                        </>}
                     </ListGroup>
                     <h3 className='addLine mt-3'>Statistiques de { AllUsers.length && singleCar.proprietaireId && AllUsers.find(({id})=>id===singleCar.proprietaireId).nom }</h3>
       <DonutChart v={CarsOfUser.length} u={0} c={0}/>
       </Col>
           </Row>
           <Row> 
-       { CarsOfUser.map((car)=>(
+       { CarsOfUserExceptTheClicked.map((car)=>(
            <Col  key={car.voitureId} sm={12} md={6} lg={4} xl={3}>
            <SingleCar car={car}/>
            </Col>

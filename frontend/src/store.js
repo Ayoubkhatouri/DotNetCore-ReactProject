@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";  
 import userReducer from './features/user/userSlice'
 import carReducer from './features/car/carSlice'
+import demandeReducer from './features/demande/demandeService'
 
 
 export const store=configureStore({
 reducer:{
     user:userReducer,
-    car:carReducer
+    car:carReducer,
+    demande:demandeReducer
 }
 })

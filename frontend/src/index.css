@@ -132,20 +132,47 @@ transition: 0.5s;
 .imageCarousel{
   height: 480px;
   width: 1000px;
+  
 }
 .specialOff{
-  background-color: rgb(252, 252, 136);
-  border-radius: 50%;
-  opacity: 0.7;
+  background-color: red;
+ width: 250px;
+
+right: -110px;
+bottom:-20px;
+position: absolute;
+
 }
+
+
+
 
 .myDivSearch{
   margin-top: 35px;
 display: flex;
 justify-content: space-between;
-border-bottom: 2px solid #2c3e50;
 flex-direction: row;
 flex-wrap: wrap;
 }
+.hh{
+  flex-grow: 0.9999;
+}
+.flexMe{
+  display: flex;
+  justify-content: space-between;
+flex-direction: row;
+flex-wrap: wrap;
+}
+.help{
+  all: unset;
+  cursor: pointer;
+ 
+}
+.help:hover{
+  all: unset;
+  cursor: pointer;
+}
+
+
 
 

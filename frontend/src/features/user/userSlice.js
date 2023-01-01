@@ -31,6 +31,34 @@ const initialState={
        isLoadingUpdate:false,
        messageUpdate:''
        },
+       AllUsersRoleInfo:{
+        AllUsersRole:[],
+        isErrorAllUsersRole:false,
+       isSuccessAllUsersRole:false,
+       isLoadingAllUsersRole:false,
+       messageAllUsersRole:''
+    },
+    AddRoleInfo:{
+        isErrorAddRole:false,
+        isSuccessAddRole:false,
+        isLoadingAddRole:false,
+        messageAddRole:''
+     },
+     RemoveRoleInfo:{
+        isErrorRemoveRole:false,
+        isSuccessRemoveRole:false,
+        isLoadingRemoveRole:false,
+        messageRemoveRole:''
+     },
+    
+     AllUserFavoriteInfo:{
+        AllUserFavorite:[],
+        isErrorAllUserFavorite:false,
+       isSuccessAllUserFavorite:false,
+       isLoadingAllUserFavorite:false,
+       messageAllUserFavorite:''
+    },
+    
 }
 
 
@@ -91,12 +119,86 @@ export const updateUser=createAsyncThunk('user/update',async(userdata,thunkAPI)=
         || error.message || error.toString()
         console.log(message)
         return thunkAPI.rejectWithValue(message)
-    
+    }
+})
+
+//get all users role
+export const getAllUsersRole=createAsyncThunk('users/getAllbyrol',async(role,thunkAPI)=>{
+    try {
+        
+        return await userService.getAllUsersRole(role)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
 
     }
 })
 
+// user add Role
+export const addRole=createAsyncThunk('users/addRole',async(userIdAndRole,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.addRole(userIdAndRole,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
 
+    }
+})
+
+// user delete Role
+export const removeRole=createAsyncThunk('users/removeRole',async(userIdAndRole,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.removeRole(userIdAndRole,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+// add Faovorite
+export const addFavorite=createAsyncThunk('users/addFav',async(userIdAndVoitureId,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.addFavorite(userIdAndVoitureId,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+// get Faovorites of a user
+export const getFavoriteUser=createAsyncThunk('users/getAllFav',async(id,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.getFavoriteUser(id,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+// delete Faovorite
+export const deleteFavorite=createAsyncThunk('users/deleteFav',async(userIdAndVoitureId,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.deleteFavorite(userIdAndVoitureId,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
 
 
 export const userSlice =createSlice({
@@ -184,8 +286,65 @@ export const userSlice =createSlice({
     state.userUpdateInfo.isErrorUpdate=true
     state.userUpdateInfo.messageUpdate=action.payload 
 })
-    
+     /////////////////////////
+     .addCase(getAllUsersRole.pending,(state)=>{
+        state.AllUsersRoleInfo.isLoadingAllUsersRole=true
+    })
+        .addCase(getAllUsersRole.fulfilled,(state,action)=>{
+        state.AllUsersRoleInfo.isLoadingAllUsersRole=false
+        state.AllUsersRoleInfo.isSuccessAllUsersRole= true       
+        state.AllUsersRoleInfo.AllUsersRole=action.payload 
+    })
+        .addCase(getAllUsersRole.rejected,(state,action)=>{
+        state.AllUsersRoleInfo.isLoadingAllUsersRole=false
+        state.AllUsersRoleInfo.isErrorAllUsersRole=true
+        state.AllUsersRoleInfo.messageAllUsersRole=action.payload 
+    })
 
+    //////////////////
+    .addCase(addRole.pending,(state)=>{
+        state.AddRoleInfo.isLoadingAddRole=true
+    })
+        .addCase(addRole.fulfilled,(state,action)=>{
+        state.AddRoleInfo.isLoadingAddRole=false
+        state.AddRoleInfo.isSuccessAddRole= true       
+ 
+    })
+        .addCase(addRole.rejected,(state,action)=>{
+        state.AddRoleInfo.isLoadingAddRole=false
+        state.AddRoleInfo.isErrorAddRole=true
+        state.AddRoleInfo.messageAddRole=action.payload 
+    })
+
+       //////////////////
+       .addCase(removeRole.pending,(state)=>{
+        state.RemoveRoleInfo.isLoadingRemoveRole=true
+    })
+        .addCase(removeRole.fulfilled,(state,action)=>{
+        state.RemoveRoleInfo.isLoadingRemoveRole=false
+        state.RemoveRoleInfo.isSuccessRemoveRole= true       
+ 
+    })
+        .addCase(removeRole.rejected,(state,action)=>{
+        state.RemoveRoleInfo.isLoadingRemoveRole=false
+        state.RemoveRoleInfo.isErrorRemoveRole=true
+        state.RemoveRoleInfo.messageRemoveRole=action.payload 
+    })
+    
+     /////////////////////////
+     .addCase(getFavoriteUser.pending,(state)=>{
+        state.AllUserFavoriteInfo.isLoadingAllUserFavorite=true
+    })
+        .addCase(getFavoriteUser.fulfilled,(state,action)=>{
+        state.AllUserFavoriteInfo.isLoadingAllUserFavorite=false
+        state.AllUserFavoriteInfo.isSuccessAllUserFavorite= true       
+        state.AllUserFavoriteInfo.AllUserFavorite=action.payload 
+    })
+        .addCase(getFavoriteUser.rejected,(state,action)=>{
+        state.AllUserFavoriteInfo.isLoadingAllUserFavorite=false
+        state.AllUserFavoriteInfo.isErrorAllUserFavorite=true
+        state.AllUserFavoriteInfo.messageAllUserFavorite=action.payload 
+    })  
 
 
 }

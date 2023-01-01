@@ -53,7 +53,6 @@ const submitHandler=(e)=>{
  dispatch(updateUser({id,nom,prenom,telephone,ville,adresse,isAgence}))
  window.location.reload()
 
-
  }
 
   if(isLoadingUpdate)

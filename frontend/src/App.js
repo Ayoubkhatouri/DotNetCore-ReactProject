@@ -11,6 +11,13 @@ import AjouterVoitureScreen from './screens/AjouterVoitureScreen';
 import SingleCarScreen from './screens/SingleCarScreen';
 import ListAllCarsOfOwnerScreen from './screens/ListAllCarsOfOwnerScreen';
 import UpdateCarScreen from './screens/UpdateCarScreen';
+import ListAllUsersScreen from './screens/ListAllUsersScreen';
+import UserUpdateByAdminScreen from './screens/UserUpdateByAdminScreen';
+import MarqueAndModelScreen from './screens/MarqueAndModelScreen';
+import OffresSpecialScreen from './screens/OffresSpecialScreen';
+import VoitureFavoriesScreen from './screens/VoitureFavoriesScreen';
+import DemandeMadeByUserScreen from './screens/DemandeMadeByUserScreen';
+
 
 
 function App() {
@@ -29,6 +36,12 @@ function App() {
     <Route path='/Voiture/:id' element={<SingleCarScreen/>}/>
     <Route path='/voiture/Voitures' element={<ListAllCarsOfOwnerScreen/>}/>
     <Route path='/voiture/modifier/:id' element={<UpdateCarScreen/>}/>
+    <Route path='/users/all' element={<ListAllUsersScreen/>}/>
+    <Route path='/admin/users/modifier/:id' element={<UserUpdateByAdminScreen/>}/>
+    <Route path='/admin/marqueModel' element={<MarqueAndModelScreen/>}/>
+    <Route path='/voiture/Voitures/offreSpecial' element={<OffresSpecialScreen/>}/>
+    <Route path='/users/VoituresFavories' element={<VoitureFavoriesScreen/>}/>
+    <Route path='/users/demandes' element={<DemandeMadeByUserScreen/>}/>
     </Routes>
       </Container>
     </main>

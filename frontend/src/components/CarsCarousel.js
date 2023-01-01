@@ -18,11 +18,19 @@ const CarsCarousel = () => {
   const allOffresSpecialInfo=useSelector(state=>state.car.allOffresSpecialInfo)
   const {allCarsOffreSpecialLoading,allCarsOffreSpecialSucces,allCarsOffreSpecialError,allCarsOffreSpecialMessageError,allCarsOffreSpecial}=allOffresSpecialInfo
 
+  const user=useSelector(state=>state.user)
+  const {userLogin}=user
+
+  // //get only cars that belong to other 
+  let carsOfOthers=[]
+  if(userLogin && userLogin.userId){
+    carsOfOthers=allCarsOffreSpecial.filter((c)=>c.voiture.proprietaireId !== userLogin.userId)
+  }else
+  carsOfOthers=allCarsOffreSpecial
    
   useEffect(()=>{
 
     dispatch(allOffresSpecial())
- 
  
   },[dispatch])
  
@@ -43,14 +51,15 @@ const CarsCarousel = () => {
   return <>
   {allCarsOffreSpecialLoading? <Loader/> : allCarsOffreSpecialError ? <Message variant='danger'>{allCarsOffreSpecialMessageError}</Message> :(
     <Carousel fade pause='hover' className='myCarousel bg-dark'>
-        {allCarsOffreSpecial.map((car)=>(
+        {carsOfOthers.map((car)=>(
             <Carousel.Item key={car.voiture.voitureId}>
                 <Link onClick={()=>handleClick(car.voiture.voitureId)} to={`/Voiture/${car.voiture.voitureId}`}>
                     <Image className='imageCarousel' src={reglerPath(car.voiture.imagePath)}  fluid/>
                     <Carousel.Caption className='carousel-caption'>
+                      
                         <div className='specialOff'>
-                        <h4 style={{color:'red',fontSize:'20px',textDecorationLine:'line-through'}}>Prix initial:{car.voiture.prixParJour}</h4>
-                        <h4 style={{color:'green',fontSize:'27px'}}>Prix special:{car.montant}</h4>
+                        <h4 style={{color:'yellow',fontSize:'20px',textDecorationLine:'line-through'}}>Prix initial:{car.voiture.prixParJour}</h4>
+                        <h4 style={{color:'white',fontSize:'27px'}}>Prix special:{car.montant}</h4>
                         </div>
                     </Carousel.Caption>
                 </Link>

@@ -71,7 +71,7 @@ namespace EXAM_PROJET.Controllers
         [Authorize(Roles = "Admin,Proprietaire")]
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromForm] VoitureModel model,IFormFile? image)
+        public async Task<IActionResult> Put(int id, [FromBody] VoitureModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -90,13 +90,15 @@ namespace EXAM_PROJET.Controllers
 
             var mymodele = await _context.Modeles.FirstOrDefaultAsync(m => m.ModeleId == model.ModeleId);
             string pathImage = String.Empty;
-            if(image is not null) {
-                System.IO.File.Delete(model.ImagePath);
-                pathImage = Path.Combine(_environment.WebRootPath, "images", image.FileName);
+            var voiture = await _voitureRepository.GetVoitureById(id);
 
-            var streamImage = new FileStream(pathImage, FileMode.Append);
-            image.CopyTo(streamImage);
-            }
+            System.IO.File.Delete(voiture.ImagePath);
+
+            var help = model.ImagePath;
+
+            help = help.Substring(37, model.ImagePath.Length - 37);
+
+            System.IO.File.Copy(model.ImagePath, "C:\\Users\\admin\\OneDrive\\Desktop\\test2\\frontend\\public\\images\\" + help);
 
             p.Annee = model.Annee;
                 p.PrixParJour = model.PrixParJour;
@@ -105,7 +107,7 @@ namespace EXAM_PROJET.Controllers
                 p.Modele = mymodele;
                 p.Couleur = model.Couleur;
                 p.Rating = model.Rating;
-                p.ImagePath = image is not null ? pathImage : model.ImagePath;
+                p.ImagePath = "C:\\Users\\admin\\OneDrive\\Desktop\\test2\\frontend\\public\\images\\" + help;
                 p.ProprietaireId = model.ProprietaireId;
                 p.EstDisponible = model.EstDisponible;
                 p.Immatriculation = model.Immatriculation;

@@ -23,7 +23,7 @@ const register=async(userdata)=>{
 
 
 //get all Users Profile
-const getAllUsers=async(token)=>{
+const getAllUsers=async()=>{
     
     const {data}=await axios.get('/api/User')
 
@@ -49,6 +49,69 @@ const updateUser=async(userdata,token)=>{
     return data
 }
 
+//get all Users by role
+const getAllUsersRole=async(role)=>{
+    
+    const {data}=await axios.get(`/api/User/search?role=${role}`)
+
+    return data
+}
+
+//add role
+const addRole=async(userIdAndRole,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.post('/api/Auth/addrole',userIdAndRole,config)
+    return data
+}
+
+//remove role
+const removeRole=async(userIdAndRole,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.post('/api/Auth/removerole',userIdAndRole,config)
+    return data
+}
+
+// add Favorite
+const addFavorite=async(userIdAndVoitureId,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.post('/api/Favori',userIdAndVoitureId,config)
+    return data
+}
+
+//get favorite of a user
+const getFavoriteUser=async(id,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.get(`/api/Favori/${id}`,config)
+    return data
+}
+
+// add Favorite
+const deleteFavorite=async(userIdAndVoitureId,token)=>{
+    
+    const {data}=await axios.delete('/api/Favori',{
+        headers: {
+            Authorization: token
+          },
+          data: userIdAndVoitureId
+    })
+    return data
+}
 
 
 
@@ -58,7 +121,14 @@ const userService={
     register,
     getAllUsers,
     getUserDetails,
-    updateUser
+    updateUser,
+    getAllUsersRole,
+    addRole,
+    removeRole,
+    addFavorite,
+    getFavoriteUser,
+    deleteFavorite,
+    
 }
 
 export default userService

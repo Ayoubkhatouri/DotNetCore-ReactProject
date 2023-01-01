@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate,useParams } from "react-router-dom"
 import FormContainer from '../components/FormContainer'
 import {Form ,Button, Row ,Col} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +14,8 @@ const UpdateCarScreen = () => {
     
   const navigate=useNavigate()
   const dispatch=useDispatch()
+  const params=useParams()
+  const carId=params.id
 
   const {isError,isSuccess,isLoading,message,userLogin}=useSelector(state=>state.user)
 
@@ -26,29 +28,41 @@ const UpdateCarScreen = () => {
       
   const { singleCarError, singleCarLoading, singleCarSucces, singleCarMessageError, singleCar } = useSelector(state => state.car.singleCarInfo)
 
-  const [PrixParJour,setPrixParJour]=useState(0)
-  const [Annee,setAnnee]=useState('')
-  const [kilometrage,setKilometrage]=useState('')
-  const [MarqueId,setMarqueId]=useState(0)
-  const [ModeleId,setModeleId]=useState(0)
-  const [Couleur,setCouleur]=useState('')
-  const [Immatriculation,setImmatriculation]=useState('')
-  const [Description,setDescription]=useState('')
-  const [imagePath,setImagePath]=useState('')
+  const [PrixParJour,setPrixParJour]=useState(singleCar.prixParJour)
+  const [Annee,setAnnee]=useState(singleCar.annee)
+  const [kilometrage,setKilometrage]=useState(singleCar.kilometrage)
+  const [MarqueId,setMarqueId]=useState(singleCar.marqueId)
+  const [ModeleId,setModeleId]=useState(singleCar.modeleId)
+  const [Couleur,setCouleur]=useState(singleCar.couleur)
+  const [Immatriculation,setImmatriculation]=useState(singleCar.immatriculation)
+  const [Description,setDescription]=useState(singleCar.description)
+  const [imagePath,setImagePath]=useState(singleCar.imagePath)
   const [uploading,setUploading]=useState(false)
     useEffect(()=>{
         dispatch(getallMarque())
         dispatch(getallModele())
+        dispatch(listSingleCar(carId))
+        setPrixParJour(singleCar.prixParJour)
+        setAnnee(singleCar.annee)
+        setKilometrage(singleCar.kilometrage)
+        setMarqueId(singleCar.marqueId)
+        setModeleId(singleCar.modeleId)
+        setCouleur(singleCar.couleur)
+        setImmatriculation(singleCar.immatriculation)
+        setDescription(singleCar.description)
+        setImagePath(singleCar.imagePath)
+        
         if(SuccessupdateCar){
         navigate('/')
         dispatch(reset5())
     }
-       },[SuccessupdateCar,navigate,dispatch])
+       },[SuccessupdateCar,navigate,dispatch,carId,singleCar.prixParJour,singleCar.annee,singleCar.imagePath,singleCar.immatriculation,singleCar.couleur,singleCar.description,singleCar.marqueId,singleCar.modeleId,singleCar.kilometrage])
 
 
 const submitHandler=(e)=>{
     e.preventDefault()
    dispatch(updateCar({
+    id:parseInt(carId),
     PrixParJour,
     Annee,
     kilometrage,

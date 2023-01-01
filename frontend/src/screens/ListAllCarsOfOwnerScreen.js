@@ -5,16 +5,13 @@ import {Table,Button} from 'react-bootstrap'
 import { useDispatch,useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { allCarsOfUser,getallMarque,getallModele,allOffresSpecial } from '../features/car/carSlice'
+import { allCarsOfUser,getallMarque,getallModele,allOffresSpecial ,deleteCar} from '../features/car/carSlice'
 import Spinner from '../components/Spinner'
 
 
 const ListAllCarsOfOwnerScreen = () => {
 
-    function formaterDate(str){
-        return  str.substring(0,16).replace('T',' à ')
-        }
-    
+  
 const params=useParams()
     const dispatch=useDispatch()
     const user=useSelector(state=>state.user)
@@ -54,9 +51,9 @@ const params=useParams()
 
     
     const deleteHndler=(id)=>{
-        if(window.confirm('Vous voulez supprimer ce News')){
-           
-       // dispatch(deleteNews(id))
+        if(window.confirm('Vous voulez supprimer cette voiture ?')){
+       dispatch(deleteCar(id))
+       window.location.reload(true);
     }
     }
 
@@ -114,7 +111,7 @@ const params=useParams()
                                   <i className='fas fa-edit' style={{color:'green'}}></i>
                               </Button>
                           </LinkContainer>
-                          <Button variant='danger'  className='btn-sm mx-2 mt-1' onClick={()=>deleteHndler(car._id)}>
+                          <Button variant='danger'  className='btn-sm mx-2 mt-1' onClick={()=>deleteHndler(car.voitureId)}>
                           <i className='fas fa-trash'  style={{color:'red'}}></i>
                           </Button>
                       </td>
