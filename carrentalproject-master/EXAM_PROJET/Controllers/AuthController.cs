@@ -50,7 +50,7 @@ namespace EXAM_PROJET.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost("addrole")]
         public async Task<IActionResult> AddRoleAsync([FromBody] ManageRoleModel model)
         {

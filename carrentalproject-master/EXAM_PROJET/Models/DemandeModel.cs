@@ -1,4 +1,6 @@
-﻿namespace EXAM_PROJET.Models
+﻿using EXAM_PROJET.Models.User;
+
+namespace EXAM_PROJET.Models
 {
     public class DemandeModel
     {
@@ -9,6 +11,8 @@
         public DateTime DateFin { get; set; }
         public Double PrixTotal { get; set; }
         public string statut { get; set; }
+        public Voiture Voiture { get; set; }
+        public ApplicationUser? Locataire {get; set;}
 
         public DemandeModel(Demande demand) 
         {

@@ -1,7 +1,9 @@
-import React from "react";
+import React,{useContext} from "react";
 import Chart from 'react-apexcharts'
+import context1 from '../context1'
 
 function DonutChart({v,u,c,mybool}){
+    const {isEn}=useContext(context1);
     return(
         <React.Fragment>
             <div className="container-fluid ">
@@ -11,7 +13,7 @@ function DonutChart({v,u,c,mybool}){
             height={400}
             series={mybool ?[v,u,c] : [v,c]}
             options={{
-                labels:mybool ?['Voitures','Utilisateurs','Commandes'] :['Voitures','Commandes'],
+                labels:mybool ?(isEn ? ['Cars','Users','Orders'] :['Voitures','Utilisateurs','Commandes']) :(isEn ? ['Cars','Users'] :['Voitures','Commandes']),
                 
                 plotOptions:{
                     pie:{

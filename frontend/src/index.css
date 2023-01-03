@@ -21,6 +21,7 @@ main {
  font-family: Garamond, serif;
 }
 
+
 .abonnement{
   display: flex;
   margin-left: auto;
@@ -40,8 +41,9 @@ main {
     display: block;
   }
 }
-.abb:hover{
-  color: rgb(218, 218, 124);
+.hoverMe:hover{
+
+  color: white;
 }
 
 .abb{
@@ -130,20 +132,33 @@ transition: 0.5s;
 
 }
 .imageCarousel{
-  height: 480px;
-  width: 1000px;
+  height: 400px;
+  width: 800px;
   
 }
 .specialOff{
   background-color: red;
  width: 250px;
-
 right: -110px;
 bottom:-20px;
 position: absolute;
 
 }
+.myInputSearch{
+  display: flex;
+  margin-left: auto;
+}
+.bottomMe{
+  top: 20%;
+  left: 0;
+  position: relative;
+border: 1px solid #2c3e50;
+border-radius: 20%;
+}
 
+.aa{
+  margin-left: 5px;
+}
 
 
 
@@ -172,6 +187,28 @@ flex-wrap: wrap;
   all: unset;
   cursor: pointer;
 }
+
+.comments{
+  margin-top: 10px;
+  height: 40px;
+font-weight: bold;
+border-bottom: 2px solid #2c3e50 ;
+color: #2c3e50 ;
+margin-left: 0 !important;
+}
+
+
+.comments{
+  white-space: nowrap
+}
+.flexMe2{
+  right: 0 ;
+  position: absolute;
+  color: red;
+  background: none;
+  border: none;
+}
+
 
 
 

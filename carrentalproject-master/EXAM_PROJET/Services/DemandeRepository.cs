@@ -37,32 +37,44 @@ namespace EXAM_PROJET.Services
             List<DemandeModel> mylist = new List<DemandeModel>();
             foreach( var l in list)
             {
-                mylist.Add(new DemandeModel(l));
+                var v = new DemandeModel(l);
+                v.Voiture= await _voitureRepository.GetVoitureById(l.VoitureId);
+                v.Voiture.Proprietaire = await _userManager.FindByIdAsync(v.Voiture.ProprietaireId);
+               
+                v.Locataire = await _userManager.FindByIdAsync(l.locataireId);
+                mylist.Add(v);
             }
             return mylist;
         }
 
         public  async Task<List<DemandeModel>> getByLocataireId(string locataireId)
         {
-            List<Demande> list = await _context.Demandes.ToListAsync();
+            List<DemandeModel> list = await this.getAll();
             List<DemandeModel> mylist = new List<DemandeModel>();
             foreach (var l in list)
             {
-                if(l.locataireId==locataireId)
-                mylist.Add(new DemandeModel(l));
+                if (l.locataireId == locataireId) {
+                    
+                    
+                    mylist.Add(l);
+                }
             }
             return mylist;
         }
 
         public  async Task<List<DemandeModel>> getByProprietaireId(string proprietaireId)
         {
-            List<Demande> list = await _context.Demandes.ToListAsync();
+            List<DemandeModel> list = await this.getAll();
             List<DemandeModel> mylist = new List<DemandeModel>();
             foreach (var l in list)
             {
-                Voiture v =  await _voitureRepository.GetVoitureById(l.VoitureId);
-                if (v.ProprietaireId == proprietaireId)
-                    mylist.Add(new DemandeModel(l));
+                
+                
+                if (l.Voiture.ProprietaireId == proprietaireId) {
+                   
+                    mylist.Add(l);
+                }
+                    
             }
             return mylist;
         }

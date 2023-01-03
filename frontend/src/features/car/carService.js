@@ -4,7 +4,7 @@ import axios from "axios";
 const listAllCars=async()=>{
    let response
    response=await axios.get('/api/Voiture/valid')
-
+ 
    return response.data
 }
 
@@ -166,6 +166,41 @@ const addOffre=async(carIdAndOffrePrice,thunkAPI)=>{
    await axios.post(`/api/Offre`,carIdAndOffrePrice,config)
 }
 
+// get alla coments of a car
+const getAllComments=async(id)=>{
+   const {data}=await axios.get(`/api/Comment/${id}`)
+   return data
+}
+
+
+//create   a commente
+const addComment=async(objData)=>{
+   const response=await axios.post('/api/Comment',objData)
+   return  response.data
+}
+
+//delete  a commente
+const deleteComment=async(idComm)=>{
+   const response=await axios.delete(`/api/Comment/${idComm}`)
+   return  response.data
+}
+
+//create   a commente
+const addReview=async(objData)=>{
+   const response=await axios.post('/api/Review',objData)
+   return  response.data
+}
+
+//getAllReview of a car
+const getAllReview=async()=>{
+   const {data}=await axios.get(`/api/Review`)
+   return data
+}
+
+
+
+
+
 
 
  const carService={
@@ -186,7 +221,11 @@ const addOffre=async(carIdAndOffrePrice,thunkAPI)=>{
     updateOffre,
     deleteOffre,
     addOffre,
-    
+    getAllComments,
+    addComment,
+    deleteComment,
+    addReview,
+    getAllReview
  }
 
  export default carService

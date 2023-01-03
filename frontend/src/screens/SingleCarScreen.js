@@ -8,15 +8,19 @@ import { getAllUsers, addFavorite,getFavoriteUser,deleteFavorite  } from '../fea
 import { Row, Col, Image, ListGroup, Form, Button } from 'react-bootstrap'
 import DonutChart from '../components/DonutChart'
 import SingleCar from '../components/SingleCar'
-import {reset4,allOffresSpecial,isOffreSpecial, listSingleCar, getallMarque, getallModele,allCarsOfUser} from '../features/car/carSlice'
+import { getAllDemandeReceive } from '../features/demande/demandeSlice'
+import {addReview,getAllReview, addComment,deleteComment, getAllComments,allOffresSpecial,isOffreSpecial, listSingleCar, getallMarque, getallModele,allCarsOfUser} from '../features/car/carSlice'
 import { addDemande } from '../features/demande/demandeSlice'
 
 
 const SingleCarScreen = () => {
 
+
   const navigate = useNavigate()
   const params = useParams()
   const dispatch = useDispatch()
+  const [comment ,setComment]=useState('')
+  const [rating,setRating]=useState(0)
 
   const [ajouterDemande,setAjouterDemande]=useState(false)
   const [dateDebut,setDateDebut]=useState('')
@@ -24,6 +28,14 @@ const SingleCarScreen = () => {
   const [prixTotal,setPrixTotal]=useState('')
 
   const { singleCarError, singleCarLoading, singleCarSucces, singleCarMessageError, singleCar } = useSelector(state => state.car.singleCarInfo)
+
+
+  const allReviewCarInfo=useSelector(state=>state.car.allReviewCarInfo)
+  const {allReviewCar,allReviewCarSucces,allReviewCarLoading,allReviewCarError,allReviewCarMessageError}=allReviewCarInfo
+  
+  let listreviewOfCar=allReviewCar.length ? allReviewCar.filter(r=>r.voitureId===singleCar.voitureId) :[]
+  let valuerev=listreviewOfCar.length ? listreviewOfCar.reduce((acc,item)=>item.rating+acc,0)/listreviewOfCar.length :0
+ 
 
 
   const allCarsOfUserOfUserInfo = useSelector(state => state.car.allCarsOfUserOfUserInfo)
@@ -46,9 +58,16 @@ const SingleCarScreen = () => {
   
   const {isLoadingAllUserFavorite,isSuccessAllUserFavorite,isErrorAllUserFavorite,messageAllUserFavorite,AllUserFavorite}=user.AllUserFavoriteInfo
   
+  const allCommentsInfo=useSelector(state=>state.car.allCommentsInfo)
+  const {allComments,allCommentsSucces,allCommentsLoading,allCommentsError,allCommentsMessageError}=allCommentsInfo
+  
+  
   
 
  let CarsOfUserExceptTheClicked=CarsOfUser.filter(c=>c.voitureId !=params.id)
+
+ const demande=useSelector(state=>state.demande)
+  const {AllDemandeReceive}=demande.getAllDemandeReceiveInfo
 
  const [isFavori,setIsFavori]=useState(AllUserFavorite.some((c)=>c.voitureId===singleCar.voitureId))
  
@@ -66,6 +85,9 @@ const SingleCarScreen = () => {
     dispatch(getallModele())
     dispatch(getAllUsers())
     dispatch(allOffresSpecial())
+    dispatch(getAllReview())
+    dispatch(getAllComments(params.id))
+    dispatch(getAllDemandeReceive(singleCar.proprietaireId))
     dispatch(isOffreSpecial(singleCar.voitureId))
     if(userLogin && userLogin.userId)
         dispatch(getFavoriteUser(userLogin.userId))
@@ -118,11 +140,38 @@ alert("Votre demande est envoyé avec succes")
     else 
         dispatch(deleteFavorite({
             userId:userLogin.userId,
-            voitureId:car.voitureId
+            voitureId:car.voitureId,
+         
         }))
      
 }
  }
+
+ const sumbmitHandler=(e)=>{
+  e.preventDefault()
+  dispatch(addComment({
+    userId:userLogin.userId,
+    voitureId:params.id,
+    comment,
+  }))
+ window.location.reload(true)
+}
+
+const handlDelete=(comid)=>{
+ dispatch( deleteComment(comid))
+ window.location.reload(true)
+
+}
+
+const handlAddRev=(e)=>{
+  e.preventDefault()
+  dispatch(addReview({
+    voitureId:params.id,
+    userId:userLogin.userId,
+    rating:parseInt(rating)
+  }))
+  window.location.reload(true)
+}
 
   if (singleCarLoading)
     return <Loader />
@@ -136,7 +185,7 @@ alert("Votre demande est envoyé avec succes")
            <h1 >{marques && marques.length &&  singleCar.marqueId && marques.find(({ marqueId }) => marqueId === singleCar.marqueId).nomMarque}
             {" "}  {models && models.length  && singleCar.modeleId && models.find(({ modeleId }) => modeleId === singleCar.modeleId).nomModel}</h1>
             <div style={{fontSize:'30px'}}>
-            <Rating value={singleCar.rating} />
+            <Rating value={valuerev} text={'  '+listreviewOfCar.length +" Reviews"} />
             </div>
         </div>
           <Row>
@@ -149,6 +198,27 @@ alert("Votre demande est envoyé avec succes")
                 <h4 style={{ whiteSpace:'pre-line'}}>
                 {singleCar.description}
             </h4>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                <Col md={9}>
+                    <h4 className='comments'>Commentaires</h4>
+                       { ( allComments.length===0) && <Message>Pas de Commentaire</Message>}
+                       { (allComments  && allComments.length>0) &&(
+                       <ListGroup variant='flush'>
+                                {allComments.map((c)=>(
+                                    <ListGroup.Item key={c.id}>
+                                        <strong style={{fontSize:"19px"}}>{c.nomUser}</strong>
+                            
+                                        <p >{c.comment} {userLogin && c.userId ===userLogin.userId && 
+                                      <Button  className='btn btn-danger flexMe2' onClick={()=>handlDelete(c.id)}>  <i   className="fa-solid fa-trash "></i></Button>
+                                        }</p>
+                                       
+                                    </ListGroup.Item>
+                                               
+                                ))}
+                                    </ListGroup>)
+                                }
+                                </Col>
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -215,13 +285,66 @@ alert("Votre demande est envoyé avec succes")
                         </>}
                     </ListGroup>
                     <h3 className='addLine mt-3'>Statistiques de { AllUsers.length && singleCar.proprietaireId && AllUsers.find(({id})=>id===singleCar.proprietaireId).nom }</h3>
-      <DonutChart v={CarsOfUser.length} u={0} c={0}/>
+      <DonutChart v={CarsOfUser.length} u={0} c={AllDemandeReceive.length}/>
       </Col>
           </Row>
+          <Row>
+               
+                                <Col md={4}>
+                                <h4 className='comments'>Ajouté Votre Commentaire</h4>
+                                 <ListGroup variant='flush'>
+                                <ListGroup.Item>
+                              
+                                    {userLogin ? (
+                                    <Form onSubmit={sumbmitHandler}>                                     
+                                        <Form.Group controlId='comment'>
+                                           
+                                            <Form.Control as='textarea' row='3' value={comment}
+                                            onChange={(e)=>setComment(e.target.value)}>
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Button className='mt-3' type='submit' variant='primary'>Ajouter</Button>
+                                    </Form>)
+                                        :
+                                    <Message>SVP <Link to='/users/abonnez'>Abonnez vous</Link> Pour Ajouter Un Commentaire{" "} </Message>}
+                                </ListGroup.Item>
+                                </ListGroup>
+                                
+            </Col>
+            <Col md={4}>
+            <h4 className='comments'>Ajouter Un Rating</h4>
+            <ListGroup variant='flush'>
+            <ListGroup.Item>
+                              
+                                   
+                                    {userLogin ? (
+                                    <Form onSubmit={handlAddRev}>
+                                        <Form.Group controlId='rating'>
+                                           
+                                            <Form.Control as='select' value={rating} 
+                                            onChange={(e)=>{setRating(e.target.value)}}>
+                                                <option value=''>Selectiné ...</option>
+                                                <option value='1'>1 - Médiocre </option>
+                                                <option value='2'>2 - Passable </option>
+                                                <option value='3'>3 - Bien </option>
+                                                <option value='4'>4 - Très bien </option>
+                                                <option value='5'>5 - Excellent</option>
+                                            </Form.Control>
+                                        </Form.Group>
+                                        <Button disabled={!rating.length} className='mt-3' type='submit' variant='primary'>Ajouter</Button>
+                                        </Form>
+                                       )
+                                        :
+                                        <Message>SVP <Link to='/users/abonnez'>Abonnez vous</Link> Pour Ajouter Un Rating{" "} </Message>}
+                                </ListGroup.Item>
+                    </ListGroup>
+            </Col>
+            </Row>
+
           <Row> 
        { CarsOfUserExceptTheClicked.map((car)=>(
            <Col  key={car.voitureId} sm={12} md={6} lg={4} xl={3}>
-           <SingleCar car={car}/>
+           <SingleCar car={car}  allcarReviews={allReviewCar}/>
            </Col>
        ))}
    </Row>

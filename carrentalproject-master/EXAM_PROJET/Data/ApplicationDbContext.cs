@@ -1,4 +1,6 @@
 ﻿using EXAM_PROJET.Models;
+using EXAM_PROJET.Models.Comment;
+using EXAM_PROJET.Models.Reviews;
 using EXAM_PROJET.Models.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -37,5 +39,7 @@ namespace EXAM_PROJET.Data
         public DbSet<Favori> Favoris { get; set; }
         public DbSet<Demande> Demandes { get; set; } 
         public DbSet<Offre> Offres { get; set; }
+        public DbSet<Comment> Comments { get; set; }    
+        public DbSet<Review> Reviews { get; set; }
     }
 }

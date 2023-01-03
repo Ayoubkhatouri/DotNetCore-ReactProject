@@ -1,10 +1,11 @@
-import React,{useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import {getallMarque,getallModele,addMarque,addModele } from '../features/car/carSlice'
 import Spinner from '../components/Spinner'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { Row, Col, Image, ListGroup, Form, Button } from 'react-bootstrap'
+import context1 from '../context1'
 
 const MarqueAndModelScreen = () => {
   
@@ -20,7 +21,7 @@ const MarqueAndModelScreen = () => {
     const {LoadingAddMarque,ErrorAddMarque,messageAddMarque,SuccessAddMarque}=useSelector(state=>state.car.AddMarqueInfo)
     
     const {LoadingAddModele,ErrorAddModele,messageAddModele,SuccessAddModele}=useSelector(state=>state.car.AddModeleInfo)
-
+    const {isEn}=useContext(context1)
     useEffect(()=>{
         dispatch(getallMarque())
         dispatch(getallModele())
@@ -52,7 +53,7 @@ const MarqueAndModelScreen = () => {
   return (
     <Row className='mt-3' >
     <Col  sm={12} md={6} lg={6} xl={6} >
-        <h1 className='addLine mb-4 mt-3'>Marques</h1>
+        <h1 className='addLine mb-4 mt-3'>{isEn ? "Brand":'MARQUE'}</h1>
         <ListGroup variant='flush'>
         {marques.map((marque)=>(
                      <ListGroup.Item key={marque.marqueId}>
@@ -64,14 +65,14 @@ const MarqueAndModelScreen = () => {
                 <Form.Control  placeholder='Nouvelle Marque' value={newMarque}
                 onChange={(e)=>setNewMarque(e.target.value)}> 
                 </Form.Control>
-                <Button  variant='primary' className='mt-3' onClick={()=>HandleAddMarque(newMarque)}>Ajouter</Button>
+                <Button  variant='primary' className='mt-3' onClick={()=>HandleAddMarque(newMarque)}>{isEn ? "Add":'Ajouter'}</Button>
                 </Form.Group>
                 </ListGroup.Item>
                         </ListGroup>
                        
       </Col> 
       <Col  className='todayNews'  sm={12} md={6} lg={6} xl={6}>
-        <h1 className='addLine mb-4 mt-3'>Models</h1>
+        <h1 className='addLine mb-4 mt-3'>{isEn ? "Models":'Modèle'}</h1>
         <ListGroup variant='flush'>
         {models.map((model)=>(
                      <ListGroup.Item key={model.modeleId}> 
@@ -83,13 +84,13 @@ const MarqueAndModelScreen = () => {
                 onChange={(e)=>setNewModel(e.target.value)}> 
                 </Form.Control>
                 <Form.Select onChange={(e)=>setMarqueId(e.target.value!=="Choisir une Marque" ? marques.find(({nomMarque})=>nomMarque===e.target.value).marqueId : 0)} >
-            <option>Choisir une Marque</option>
+            <option>{isEn ? "Chose your Brand":'Choisir une Marque'}</option>
                 {marques.map((marque)=>(
                      <option  key={marque.marqueId} >{marque.nomMarque}</option>
                 ))}               
                     </Form.Select>
                     <Button  variant='primary' className='mt-3'  disabled={(MarqueId===0 ||  !newModel.length)? true :false }
-                    onClick={()=>HandleAddModel(MarqueId,newModel)}>Ajouter</Button>
+                    onClick={()=>HandleAddModel(MarqueId,newModel)}>{isEn ? "Add":'Ajouter'}</Button>
                 </ListGroup.Item>
                         </ListGroup>
       </Col> 

@@ -1,13 +1,16 @@
 import React from 'react'
 import {Container,Row,Col} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 
-const Footer = () => {
+
+
+const Footer = ({isEn}) => {
   return (
     <footer>
     <div className="footer">
     <span  className='logoFOT'>CAR RENTAL</span>
-    <p style={{color:"black" ,fontWeight:"bold"}}>made by JHHA</p>
-    <span style={{color:"black" ,fontWeight:"bold"}}>Suivez-nous</span>
+    <p style={{color:"black" ,fontWeight:"bold"}}>made by JAHH</p>
+    <span style={{color:"black" ,fontWeight:"bold"}}>{isEn ? "Follow Us":"Suivez nous"}</span>
     <div className="socials-icones">
         <i className="fab fa-facebook-square"></i>
         <i className="fab fa-twitter-square"></i>

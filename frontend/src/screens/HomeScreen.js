@@ -1,7 +1,7 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect,useContext, useState} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import { useParams } from 'react-router-dom'
-import {reset4, listAllCars,reset2,allOffresSpecial,getallMarque,getallModele } from '../features/car/carSlice'
+import {reset4, listAllCars,reset2,allOffresSpecial,getallMarque,getallModele ,getAllReview} from '../features/car/carSlice'
 import SingleCar from '../components/SingleCar'
 import {Row,Col} from 'react-bootstrap'
 import Spinner from '../components/Spinner'
@@ -11,12 +11,13 @@ import CarsCarousel from '../components/CarsCarousel'
 import Message from '../components/Message'
 import DonutChart from '../components/DonutChart'
 import {Form,Button} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { getAllDemande } from '../features/demande/demandeSlice'
+import context1 from '../context1'
 
 
 
 const HomeScreen = () => {
-
+  const {isEn,setIsEn}=useContext(context1)
   const dispatch=useDispatch()
   const [keyword,setKeyword]=useState('')
   const [keywordModel,setKeywordModel]=useState('')
@@ -31,6 +32,12 @@ const HomeScreen = () => {
   const user=useSelector(state=>state.user)
   const {userLogin}=user
   const {isLoadingAllUsers,isErrorAllUsers,messageAllUsers,AllUsers}=user.AllUsersInfo
+  
+  const allReviewCarInfo=useSelector(state=>state.car.allReviewCarInfo)
+  const {allReviewCar,allReviewCarSucces,allReviewCarLoading,allReviewCarError,allReviewCarMessageError}=allReviewCarInfo
+
+const demande=useSelector(state=>state.demande)
+  const {AllDemande}=demande.getAllDemandeInfo
 
   //get only cars that belong to other 
   let carsOfOthers=[]
@@ -77,11 +84,10 @@ const HomeScreen = () => {
    dispatch(getAllUsers())
    dispatch(getallMarque())
    dispatch(getallModele())
-
+dispatch(getAllReview())
+  dispatch(getAllDemande())
   
  },[dispatch,allCarsSucces])
-
-
 
 
  if(allCarsLoading)
@@ -90,25 +96,25 @@ const HomeScreen = () => {
  return (
    <> 
      <Row className='mt-3' >
-        <Col  sm={12} md={9} lg={8} xl={8} >
-        <h1 className='addLine mb-4 mt-3'>Offres Special</h1>
+        <Col  sm={12} md={12} lg={7} xl={7} >
+        <h1 className='addLine mb-4 mt-3'>{isEn ? "Special Offers" :"Offres Specials"}</h1>
       <CarsCarousel  />
       </Col>    
-      <Col  className='todayNews'  sm={12} md={3} lg={4} xl={4}>
-      <h1 className='addLine mb-4 mt-3'>Statistiques</h1>
-      <DonutChart v={allCars.length} u={AllUsers.length} c={6} mybool={true}/>
+      <Col  className='todayNews'  sm={12} md={12} lg={5} xl={5}>
+      <h1 className='addLine mb-4 mt-3'>{isEn ? "Statistics":"Statistiques"}</h1>
+      <DonutChart v={allCars.length} u={AllUsers.length} c={AllDemande.length} mybool={true}/>
       </Col>
     </Row>
-    <div className='myDivSearch  mb-4 mt-5'>
-    <h1 className='addLine hh' >Nos Voiture</h1>
+    <div className='myDivSearch addLine  mb-4 mt-5'>
+    <h1 className='hh' >{isEn ? "Our Cars":"Nos Voitures"}</h1>
     <div className='myInputSearch'>
-    <Form   style={{height:'40px'}}>
+    <Form   style={{height:'40px'}} className='bottomMe'>
         <Form.Control type='text' name='q'  onChange={(e)=>setKeyword(e.target.value)}
-        placeholder='Chercher Par Marque' ></Form.Control>
+        placeholder={isEn ? "Search By Brand":"Chercher Par Marque"} ></Form.Control>
     </Form>
-    <Form   style={{height:'40px'}}>
+    <Form   style={{height:'40px'}} className='bottomMe aa'> 
         <Form.Control type='text' name='q'  onChange={(e)=>setKeywordModel(e.target.value)}
-        placeholder='Chercher Par Modele' ></Form.Control>
+        placeholder={isEn ? "Search By Model":"Chercher Par Model"} ></Form.Control>
     </Form>
     </div>
     </div>
@@ -118,7 +124,7 @@ const HomeScreen = () => {
       
        {carsBySearch.map((car)=>(
            <Col  key={car.voitureId} sm={12} md={6} lg={4} xl={3}>
-           <SingleCar car={car}/>
+           <SingleCar car={car} allcarReviews={allReviewCar} />
            </Col>
        ))}
    </Row>

@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useContext, useEffect} from 'react'
 import { Link ,useNavigate} from 'react-router-dom'
 import { Carousel,Image } from 'react-bootstrap'
 import Loader from './Loader'
@@ -6,6 +6,7 @@ import Message from './Message'
 import { listAllCars ,reset2} from '../features/car/carSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { allOffresSpecial } from '../features/car/carSlice'
+import context1 from '../context1'
 
 
 
@@ -13,7 +14,7 @@ const CarsCarousel = () => {
 
     const navigate=useNavigate()
     const dispatch=useDispatch()
-
+  const {isEn} = useContext(context1);
     
   const allOffresSpecialInfo=useSelector(state=>state.car.allOffresSpecialInfo)
   const {allCarsOffreSpecialLoading,allCarsOffreSpecialSucces,allCarsOffreSpecialError,allCarsOffreSpecialMessageError,allCarsOffreSpecial}=allOffresSpecialInfo
@@ -58,8 +59,8 @@ const CarsCarousel = () => {
                     <Carousel.Caption className='carousel-caption'>
                       
                         <div className='specialOff'>
-                        <h4 style={{color:'yellow',fontSize:'20px',textDecorationLine:'line-through'}}>Prix initial:{car.voiture.prixParJour}</h4>
-                        <h4 style={{color:'white',fontSize:'27px'}}>Prix special:{car.montant}</h4>
+                        <h4 style={{color:'yellow',fontSize:'20px',textDecorationLine:'line-through'}}>{isEn ? "Base Price : ":"Prix initiale :"}{car.voiture.prixParJour}</h4>
+                        <h4 style={{color:'white',fontSize:'27px'}}>{isEn ? " Special Price : ":"Prix spéciale : "}{car.montant}</h4>
                         </div>
                     </Carousel.Caption>
                 </Link>

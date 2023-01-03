@@ -58,6 +58,20 @@ const initialState={
        isLoadingAllUserFavorite:false,
        messageAllUserFavorite:''
     },
+    AllUserBlackListedInfo:{
+        AllUserBlackListed:[],
+        isErrorAllUserBlackListed:false,
+       isSuccessAllUserBlackListed:false,
+       isLoadingAllUserBlackListed:false,
+       messageAllUserBlackListed:''
+    },
+    AllUserPropInfo:{
+        AllUserProp:[],
+        isErrorAllUserProp:false,
+       isSuccessAllUserProp:false,
+       isLoadingAllUserProp:false,
+       messageAllUserProp:''
+    },
     
 }
 
@@ -199,6 +213,35 @@ export const deleteFavorite=createAsyncThunk('users/deleteFav',async(userIdAndVo
 
     }
 })
+
+// get Users blacklisted
+export const getUsersByRolesBlackList=createAsyncThunk('users/getBlackListed',async(_,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.getUsersByRolesBlackList(_,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+// get Users Prop
+export const getUsersByRolesProp=createAsyncThunk('users/getProp',async(_,thunkAPI)=>{
+    try {
+        const token=thunkAPI.getState().user.userLogin.token
+        return await userService.getUsersByRolesProp(_,token)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+
+    }
+})
+
+
+
 
 
 export const userSlice =createSlice({
@@ -344,6 +387,36 @@ export const userSlice =createSlice({
         state.AllUserFavoriteInfo.isLoadingAllUserFavorite=false
         state.AllUserFavoriteInfo.isErrorAllUserFavorite=true
         state.AllUserFavoriteInfo.messageAllUserFavorite=action.payload 
+    })  
+
+    /////////////////////////
+    .addCase(getUsersByRolesBlackList.pending,(state)=>{
+        state.AllUserBlackListedInfo.isLoadingAllUserBlackListed=true
+    })
+        .addCase(getUsersByRolesBlackList.fulfilled,(state,action)=>{
+        state.AllUserBlackListedInfo.isLoadingAllUserBlackListed=false
+        state.AllUserBlackListedInfo.isSuccessAllUserBlackListed= true       
+        state.AllUserBlackListedInfo.AllUserBlackListed=action.payload 
+    })
+        .addCase(getUsersByRolesBlackList.rejected,(state,action)=>{
+        state.AllUserBlackListedInfo.isLoadingAllUserBlackListed=false
+        state.AllUserBlackListedInfo.isErrorAllUserBlackListed=true
+        state.AllUserBlackListedInfo.messageAllUserBlackListed=action.payload 
+    })  
+
+     /////////////////////////
+     .addCase(getUsersByRolesProp.pending,(state)=>{
+        state.AllUserPropInfo.isLoadingAllUserProp=true
+    })
+        .addCase(getUsersByRolesProp.fulfilled,(state,action)=>{
+        state.AllUserPropInfo.isLoadingAllUserProp=false
+        state.AllUserPropInfo.isSuccessAllUserProp= true       
+        state.AllUserPropInfo.AllUserProp=action.payload 
+    })
+        .addCase(getUsersByRolesProp.rejected,(state,action)=>{
+        state.AllUserPropInfo.isLoadingAllUserProp=false
+        state.AllUserPropInfo.isErrorAllUserProp=true
+        state.AllUserPropInfo.messageAllUserProp=action.payload 
     })  
 
 

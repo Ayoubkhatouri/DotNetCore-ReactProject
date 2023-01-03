@@ -77,7 +77,7 @@ namespace EXAM_PROJET.Controllers
             {
                 return BadRequest(ModelState);
             }
-             var p = await  _voitureRepository.GetVoitureById(id);
+            var p = await _voitureRepository.GetVoitureById(id);
             if (p == null) return BadRequest("id voiture n'exist pas");
 
             var product = await _context.Marques.FirstOrDefaultAsync(m => m.MarqueId == model.MarqueId);
@@ -101,16 +101,16 @@ namespace EXAM_PROJET.Controllers
             System.IO.File.Copy(model.ImagePath, "C:\\Users\\admin\\OneDrive\\Desktop\\test2\\frontend\\public\\images\\" + help);
 
             p.Annee = model.Annee;
-                p.PrixParJour = model.PrixParJour;
-                p.Kilometrage = model.Kilometrage;
-                p.MarqueId = model.MarqueId;
-                p.Modele = mymodele;
-                p.Couleur = model.Couleur;
-                p.Rating = model.Rating;
-                p.ImagePath = "C:\\Users\\admin\\OneDrive\\Desktop\\test2\\frontend\\public\\images\\" + help;
-                p.ProprietaireId = model.ProprietaireId;
-                p.EstDisponible = model.EstDisponible;
-                p.Immatriculation = model.Immatriculation;
+            p.PrixParJour = model.PrixParJour;
+            p.Kilometrage = model.Kilometrage;
+            p.MarqueId = model.MarqueId;
+            p.Modele = mymodele;
+            p.Couleur = model.Couleur;
+            p.Rating = model.Rating;
+            p.ImagePath = "C:\\Users\\admin\\OneDrive\\Desktop\\test2\\frontend\\public\\images\\" + help;
+            p.ProprietaireId = model.ProprietaireId;
+            p.EstDisponible = model.EstDisponible;
+            p.Immatriculation = model.Immatriculation;
             p.Description = model.Description;
 
             await _context.SaveChangesAsync();
@@ -121,9 +121,6 @@ namespace EXAM_PROJET.Controllers
 
 
         }
-
-
-
 
 
 
@@ -177,6 +174,7 @@ namespace EXAM_PROJET.Controllers
             await _context.SaveChangesAsync();
             return Ok(m);
         }
+
         [Authorize(Roles = "Admin,Proprietaire")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

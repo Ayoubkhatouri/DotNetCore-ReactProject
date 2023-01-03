@@ -116,7 +116,27 @@ const initialState={
         messageAddOffre:'',
         SuccessAddOffre:false
     },
-  
+    allCommentsInfo:{
+        allComments:[], 
+        allCommentsLoading:false,
+        allCommentsError:false,
+        allCommentsSucces:false,
+        allCommentsMessageError:'',
+    },
+    addCommentsInfo:{
+        addComments:[],
+        addCommentsLoading:false,
+        addCommentsError:false,
+        addCommentsSucces:false,
+        addCommentsMessageError:'',
+    },
+    allReviewCarInfo:{
+        allReviewCar:[], 
+        allReviewCarLoading:false,
+        allReviewCarError:false,
+        allReviewCarSucces:false,
+        allReviewCarMessageError:'',
+    },
 
 }
 
@@ -309,6 +329,61 @@ export const addOffre=createAsyncThunk("/offre/add",async(carIdAndOffrePrice,thu
     }
 })
 
+//get all comments of a car
+export const getAllComments=createAsyncThunk("/comment/getAll",async(id,thunkAPI)=>{
+    try {
+      return  await carService.getAllComments(id)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//add a comment
+export const addComment=createAsyncThunk("/comment/addComment",async(objData,thunkAPI)=>{
+    try {
+      return  await carService.addComment(objData)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//delete a comment
+export const deleteComment=createAsyncThunk("/comment/deleteComment",async(idComm,thunkAPI)=>{
+    try {
+      return  await carService.deleteComment(idComm)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
+//add a review
+export const addReview=createAsyncThunk("/review/addReview",async(objData,thunkAPI)=>{
+    try {
+      return  await carService.addReview(objData)
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//get all review of a car
+export const getAllReview=createAsyncThunk("/review/getAll",async(_,thunkAPI)=>{
+    try {
+      return  await carService.getAllReview()
+    } catch (error) {
+        const message=(error.response &&  error.response.data && error.response.data.message) 
+        || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 
 
 export const carSlice=createSlice({
@@ -592,6 +667,54 @@ export const carSlice=createSlice({
         state.AddOffreInfo.messageAddOffre=action.payload 
 })
 
+.addCase(getAllComments.pending,(state)=>{
+    state.allCommentsInfo.allCommentsLoading=true
+})
+.addCase(getAllComments.fulfilled,(state,action)=>{
+     state.allCommentsInfo.allCommentsLoading=false
+     state.allCommentsInfo.allCommentsSucces=true
+   
+     state.allCommentsInfo.allComments=action.payload 
+   
+})
+.addCase(getAllComments.rejected,(state,action)=>{
+     state.allCommentsInfo.allCommentsLoading=false
+     state.allCommentsInfo.allCommentsError=true
+     state.allCommentsInfo.allCommentsMessageError=action.payload 
+})
+
+///////////////////////////////////
+.addCase(addComment.pending,(state)=>{
+    state.addCommentsInfo.addCommentsLoading=true
+})
+.addCase(addComment.fulfilled,(state,action)=>{
+     state.addCommentsInfo.addCommentsLoading=false
+     state.addCommentsInfo.addCommentsSucces=true
+   
+     state.addCommentsInfo.addComments=action.payload 
+   
+})
+.addCase(addComment.rejected,(state,action)=>{
+     state.addCommentsInfo.addCommentsLoading=false
+     state.addCommentsInfo.addCommentsError=true
+     state.addCommentsInfo.addCommentsMessageError=action.payload 
+})
+
+.addCase(getAllReview.pending,(state)=>{
+    state.allReviewCarInfo.allReviewCarLoading=true
+})
+.addCase(getAllReview.fulfilled,(state,action)=>{
+     state.allReviewCarInfo.allReviewCarLoading=false
+     state.allReviewCarInfo.allReviewCarSucces=true
+   
+     state.allReviewCarInfo.allReviewCar=action.payload 
+   
+})
+.addCase(getAllReview.rejected,(state,action)=>{
+     state.allReviewCarInfo.allReviewCarLoading=false
+     state.allReviewCarInfo.allReviewCarError=true
+     state.allReviewCarInfo.allReviewCarMessageError=action.payload 
+})
 
 
 

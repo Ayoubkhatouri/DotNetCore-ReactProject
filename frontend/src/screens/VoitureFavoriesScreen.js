@@ -5,10 +5,16 @@ import {useDispatch,useSelector} from 'react-redux'
 import {getFavoriteUser} from '../features/user/userSlice'
 
 const VoitureFavoriesScreen = () => {
+
+  
     const dispatch=useDispatch()
     const user=useSelector(state=>state.user)
     const {userLogin}=user
     const {isLoadingAllUserFavorite,isSuccessAllUserFavorite,isErrorAllUserFavorite,messageAllUserFavorite,AllUserFavorite}=user.AllUserFavoriteInfo
+
+    
+  const allReviewCarInfo=useSelector(state=>state.car.allReviewCarInfo)
+  const {allReviewCar,allReviewCarSucces,allReviewCarLoading,allReviewCarError,allReviewCarMessageError}=allReviewCarInfo
 
 
     useEffect(()=>{
@@ -25,7 +31,7 @@ const VoitureFavoriesScreen = () => {
        <Row> 
       {AllUserFavorite.map((car)=>(
           <Col  key={car.voitureId} sm={12} md={6} lg={4} xl={3}>
-          <SingleCar car={car}/>
+          <SingleCar car={car} allcarReviews={allReviewCar}/>
           </Col>
       ))}
   </Row>

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import {  useNavigate,Link,useParams } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
 import {Table,Button,Form} from 'react-bootstrap'
@@ -7,6 +7,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import Spinner from '../components/Spinner'
 import {allCarsOfUser, allOffresSpecial,getallMarque,getallModele,updateOffre,deleteOffre,addOffre } from '../features/car/carSlice'
+import context1 from '../context1'
 
 
 
@@ -77,7 +78,7 @@ const OffresSpecialScreen = () => {
        }))
        window.location.reload(true)
       }
-
+  const {isEn}=useContext(context1)
       const HandleAddOffre=({idVoiture,newPrixOffre})=>{
         if(window.confirm("Vous etes sur d'ajouter l'Offre ?"))
         dispatch(addOffre({
@@ -93,7 +94,7 @@ const OffresSpecialScreen = () => {
 
   return (
     <div> 
-    <Link to='/' className='btn btn-light my-3'>Revenir</Link>
+    <Link to='/' className='btn btn-light my-3'>{isEn ? "Return":'Revenir'}</Link>
  {allCarsOffreSpecialByOwner.length === 0 ? <h1 className='addLine mb-5 mt-3'>Vous N'avez Pas D'offre Special</h1> : (
      <>
 <h1 className='addLine mb-5 mt-3'>Vos Offres Special</h1>

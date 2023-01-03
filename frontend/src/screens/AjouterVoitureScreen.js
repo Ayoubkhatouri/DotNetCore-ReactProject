@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useContext} from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import FormContainer from '../components/FormContainer'
 import {Form ,Button, Row ,Col} from 'react-bootstrap'
@@ -8,12 +8,15 @@ import { addCar,reset1,getallMarque,getallModele } from '../features/car/carSlic
 import axios from 'axios'
 import Spinner from '../components/Spinner'
 import Loader from '../components/Loader'
+import context1 from '../context1'
 
 
 
 const AjouterVoitureScreen = () => {
     const navigate=useNavigate()
     const dispatch=useDispatch()
+
+    const {isEn} =useContext(context1);
 
     const [PrixParJour,setPrixParJour]=useState(0)
     const [Annee,setAnnee]=useState('')
@@ -73,33 +76,33 @@ const AjouterVoitureScreen = () => {
 
   return (
     <>
-    <Link to='/' className='btn btn-light my-3'>Revenir</Link>
+    <Link to='/' className='btn btn-light my-3'>{isEn ? "Return":"Revenir"}</Link>
     <FormContainer>
          
-        <h1 className='addLine'>Ajouter une Voitures</h1>
+        <h1 className='addLine'>{isEn ? "Add Car":"Ajouter une Voiture"}</h1>
         {ErrorAdd && <Message variant='danger'>{messageAdd}</Message>}
         <Form onSubmit={submitHandler}>
             <Form.Group controlId='prix'>
-                <Form.Label>Prix de la Voiture par jour</Form.Label>
-                <Form.Control type='text' placeholder='Entrer Un Prix' value={PrixParJour}
+                <Form.Label>{isEn ? "Price per day ":"Prix de la Voiture par jour"}</Form.Label>
+                <Form.Control type='text' placeholder={isEn ? "Enter Price":'Entrer Un Prix'} value={PrixParJour}
                 onChange={(e)=>setPrixParJour(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='annee' className='mt-3'>
-                <Form.Label>Annee </Form.Label>
-                <Form.Control type='text' placeholder='Entrer Annee' value={Annee}
+                <Form.Label>{isEn ? "Year":"Année"} </Form.Label>
+                <Form.Control type='text' placeholder={isEn ? "Enter Year":"Entrer Année"} value={Annee}
                 onChange={(e)=>setAnnee(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='kilometrage' className='mt-3'>
-                <Form.Label>Kilometrage </Form.Label>
-                <Form.Control  type='kilometrage'  placeholder='Kilometrage' value={kilometrage}
+                <Form.Label>{isEn ? "Mileage":"Kilometrage"} </Form.Label>
+                <Form.Control  type='kilometrage'  placeholder={isEn ? "Mileage":'Kilometrage'} value={kilometrage}
                 onChange={(e)=>setKilometrage(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='marqueId' className='mt-3' >
             <Form.Select onChange={(e)=>setMarqueId(marques.find(({nomMarque})=>nomMarque===e.target.value).marqueId)} >
-            <option>Choisir une Marque</option>
+            <option>{isEn ? "Chose Brand":'Choisir une Marque'} </option>
                 {marques.map((marque)=>(
                      <option  key={marque.marqueId} >{marque.nomMarque}</option>
                 ))}               
@@ -107,40 +110,40 @@ const AjouterVoitureScreen = () => {
             </Form.Group>
             <Form.Group controlId='modeleId' className='mt-3' >
             <Form.Select onChange={(e)=>setModeleId(models.find(({nomModel})=>nomModel===e.target.value).modeleId)}>
-                    <option>Choisir un Modele</option>
+                    <option> {isEn ? "Chose Model":'Choisir un Modele'} </option>
                     {models.map((model)=>(
                      <option key={model.modeleId} >{model.nomModel}</option>
                 ))}   
                     </Form.Select>
             </Form.Group>
             <Form.Group controlId='couleur' className='mt-3' >
-                <Form.Label>Color  </Form.Label>
-                <Form.Control  type='couleur'placeholder='couleur' value={Couleur}
+                <Form.Label>{isEn ? "Color":'Coleur'}   </Form.Label>
+                <Form.Control  type='couleur'placeholder={isEn ? "Color":'Couleur'}  value={Couleur}
                 onChange={(e)=>setCouleur(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='immatriculation' className='mt-3' >
-                <Form.Label>Immatriculation </Form.Label>
-                <Form.Control  type='immatriculation'placeholder='immatriculation' value={Immatriculation}
+                <Form.Label>{isEn ? "Registration":'Immatriculation'}  </Form.Label>
+                <Form.Control  type='immatriculation'placeholder={isEn ? "Registration":'Immatriculation'}  value={Immatriculation}
                 onChange={(e)=>setImmatriculation(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='description' className='mt-3'>
-                <Form.Label>Description </Form.Label>
-                <Form.Control as='textarea' type='text' rows={4} placeholder='Description' value={Description}
+                <Form.Label>{isEn ? "Description":'Description'}  </Form.Label>
+                <Form.Control as='textarea' type='text' rows={4} placeholder={isEn ? "Description":'Description'}  value={Description}
                 onChange={(e)=>setDescription(e.target.value)}> 
                 </Form.Control>
             </Form.Group>
             <Form.Group controlId='image' className='mt-3'>
                 <Form.Label>Image </Form.Label>
-                <Form.Control type='text' placeholder='Entrer Une Image' value={imagePath}
+                <Form.Control type='text' placeholder={isEn ? "Enter Image":'Entrer Image'}  value={imagePath}
                 onChange={(e)=>setImagePath("C:\\Users\\admin\\OneDrive\\Desktop\\image\\"+e.target.value.substring(12,e.target.value.length))}> 
                 </Form.Control>
-                <Form.Control  type='File' label='Choose File'  onChange={(e)=>setImagePath("C:\\Users\\admin\\OneDrive\\Desktop\\image\\"+e.target.value.substring(12,e.target.value.length))}></Form.Control>
+                <Form.Control  type='File' label={isEn ? "Chose File":'Choisir fichier'}   onChange={(e)=>setImagePath("C:\\Users\\admin\\OneDrive\\Desktop\\image\\"+e.target.value.substring(12,e.target.value.length))}></Form.Control>
                      {uploading && <Loader/>}
             </Form.Group>       
     
-            <Button type='submit' variant='primary' className='mt-3'>Ajouter</Button>
+            <Button type='submit' variant='primary' className='mt-3'>{isEn ? "Add":'Ajouter'} </Button>
         </Form>
     </FormContainer>
     </>

@@ -113,6 +113,27 @@ const deleteFavorite=async(userIdAndVoitureId,token)=>{
     return data
 }
 
+//get users by role blacklisted
+const getUsersByRolesBlackList=async(_,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.get(`/api/User/search?role=BlackListed`,config)
+    return data
+}
+
+//get users by role Proprieter
+const getUsersByRolesProp=async(_,token)=>{
+    const config={
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    }
+    const {data}=await axios.get(`/api/User/search?role=Proprietaire`,config)
+    return data
+}
 
 
 
@@ -128,6 +149,8 @@ const userService={
     addFavorite,
     getFavoriteUser,
     deleteFavorite,
+    getUsersByRolesBlackList,
+    getUsersByRolesProp
     
 }
 

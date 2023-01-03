@@ -86,7 +86,7 @@ const submitHandler=(e)=>{
     <Link to='/' className='btn btn-light my-3'>Revenir</Link>
     <FormContainer>
          
-        <h1 className='addLine'>Ajouter une Voitures</h1>
+        <h1 className='addLine'>Modefié Voiture</h1>
         {ErrorupdateCar && <Message variant='danger'>{messageupdateCar}</Message>}
         <Form onSubmit={submitHandler}>
             <Form.Group controlId='prix'>
@@ -149,7 +149,7 @@ const submitHandler=(e)=>{
                 <Form.Control  type='File' label='Choose File'  onChange={(e)=>setImagePath("C:\\Users\\admin\\OneDrive\\Desktop\\image\\"+e.target.value.substring(12,e.target.value.length))}></Form.Control>
                      {uploading && <Loader/>}
             </Form.Group>           
-            <Button type='submit' variant='primary' className='mt-3'>Ajouter</Button>
+            <Button type='submit' variant='primary' className='mt-3'>Modifié</Button>
         </Form>
     </FormContainer>
     </>

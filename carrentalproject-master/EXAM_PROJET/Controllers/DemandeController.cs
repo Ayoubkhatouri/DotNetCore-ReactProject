@@ -22,7 +22,7 @@ namespace EXAM_PROJET.Controllers
             _voitureRepository = voitureRepository;
         }
 
-        [Authorize(Roles = "Admin,Locataire,Proprietaire")]
+      
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -38,7 +38,7 @@ namespace EXAM_PROJET.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,Proprietaire")]
+      
 
         [HttpGet("proprietaire/{id}")]
         public async Task<IActionResult> GetProprietaire(string id)

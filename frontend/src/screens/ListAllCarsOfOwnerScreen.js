@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useContext, useEffect} from 'react'
 import {  useNavigate,Link,useParams } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
 import {Table,Button} from 'react-bootstrap'
@@ -7,6 +7,7 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { allCarsOfUser,getallMarque,getallModele,allOffresSpecial ,deleteCar} from '../features/car/carSlice'
 import Spinner from '../components/Spinner'
+import context1 from '../context1'
 
 
 const ListAllCarsOfOwnerScreen = () => {
@@ -16,7 +17,7 @@ const params=useParams()
     const dispatch=useDispatch()
     const user=useSelector(state=>state.user)
     const {userLogin}=user
-       
+    const {isEn}=useContext(context1);
      
   const allOffresSpecialInfo=useSelector(state=>state.car.allOffresSpecialInfo)
   const {allCarsOffreSpecialLoading,allCarsOffreSpecialSucces,allCarsOffreSpecialError,allCarsOffreSpecialMessageError,allCarsOffreSpecial}=allOffresSpecialInfo
@@ -60,23 +61,23 @@ const params=useParams()
 
   return (
     <div> 
-           <Link to='/' className='btn btn-light my-3'>Revenir</Link>
-        {CarsOfUser.length === 0 ? <h1>Vous N'avez Pas De Voitures</h1> : (
+           <Link to='/' className='btn btn-light my-3'>{isEn ? "Return":'Revenir'}</Link>
+        {CarsOfUser.length === 0 ? <h1>{isEn ? "You have no Cars":"Vous N'avez Pas de Voitures"}Vous N'avez Pas De Voitures</h1> : (
             <>
-  <h1 className='addLine mb-5 mt-3'>Vos Voitures</h1>
+  <h1 className='addLine mb-5 mt-3'>{isEn ? "Your Cars":'Vos Voitures'}</h1>
   {/*Errordelete && <Message variant='danger'>{messagedelete}</Message>*/}
   {allCarsOfUserLoading ? <Spinner/> : allCarsOfUserError ? <Message variant='danger'>{allCarsOfUserMessageError}</Message> : (
       <Table striped bordered="true" hover responsive className='table-sm'>
           <thead>
               <tr>
-                  <th>MARQUE</th>
-                  <th>MODELE</th>
-                  <th>IMMATRICULATION</th>
-                  <th>KILOMETRAGE</th>
-                  <th>Prix par jour</th>
-                  <th>COULEUR</th>
-                  <th>Annee</th>
-                  <th>DISPONIBLE</th>
+                  <th>{isEn ? "Brand":'MARQUE'} </th>
+                  <th>{isEn ? "Model":'MODELE'} </th>
+                  <th>{isEn ? "Registration":'Immatriculation'} </th>
+                  <th>{isEn ? "Mileage":'Kilometrage'} </th>
+                  <th>{isEn ? "Price per day":'Prix par jour'}</th>
+                  <th>{isEn ? "Color":'Couleur'}</th>
+                  <th>{isEn ? "Year":'Année'}</th>
+                  <th>{isEn ? "Available":'Disponible'}</th>
                   <th></th>
               </tr>
           </thead>

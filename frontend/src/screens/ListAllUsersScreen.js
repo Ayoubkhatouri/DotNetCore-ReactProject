@@ -1,22 +1,29 @@
-import React,{useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import {  useNavigate } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
 import {Table,Button} from 'react-bootstrap'
 import { useDispatch,useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import {getAllUsers,getAllUsersRole,addRole,removeRole} from '../features/user/userSlice.js'
+import {getAllUsers,getAllUsersRole,addRole,removeRole,getUsersByRolesBlackList,getUsersByRolesProp} from '../features/user/userSlice.js'
+import context1 from '../context1'
 
 const ListAllUsersScreen = () => {
 
     const dispatch=useDispatch()
-    
+    const {isEn}=useContext(context1)
 
     const user=useSelector(state=>state.user)
     const {isLoadingAllUsers,isErrorAllUsers,messageAllUsers,AllUsers}=user.AllUsersInfo
     const {userLogin}=user
 
     const {isLoadingAllUsersRole,isErrorAllUsersRole,messageAllUsersRole,AllUsersRole}=user.AllUsersRoleInfo
+
+    const {isLoadingAllUserBlackListed,isErrorAllUserBlackListed,messageAllUserBlackListed,AllUserBlackListed}=user.AllUserBlackListedInfo
+
+    const {AllUserProp}=user.AllUserPropInfo
+    //all Users except the  admin
+    let allUsersNonthis=AllUsers.filter((u)=>u.id!==userLogin.userId)
     
 
     const navigate=useNavigate()
@@ -25,6 +32,8 @@ const ListAllUsersScreen = () => {
        
         dispatch(getAllUsers())
         dispatch(getAllUsersRole("Admin"))
+        dispatch(getUsersByRolesBlackList())
+        dispatch(getUsersByRolesProp())
         }
         else{
             navigate('/login')
@@ -52,24 +61,25 @@ const RemoveroleHandler=(id,role)=>{
 
   return (
     <>
-        <h1>Users</h1> 
+        <h1>{isEn ? "Users":'Utilisateurs'}</h1> 
         {isLoadingAllUsers ? <Loader/> : isErrorAllUsers ? <Message variant='danger'>{messageAllUsers}</Message> : (
             <Table striped bordered="true" hover responsive className='table-sm'>
                 <thead>
                     <tr>
-                        <th>PRENOM</th>
-                        <th>NOM</th>
-                        <th>EMAIL</th>
-                        <th>ADMIN</th>
-                        <th>AGENCE</th>
-                        <th>AJOUTER ROLE</th>
-                        <th>SUPPRIMER ROLE</th>
+                        <th>{isEn ? "First Name":'Prenom'} </th>
+                        <th>{isEn ? "Last Name":'Nom'} </th>
+                        <th>{isEn ? "email":'Email'} </th>
+                        <th>{isEn ? "admin":'Admin'} </th>
+                        <th>{isEn ? "Owner":'Proprietaire'} </th>
+                        <th>{isEn ? "Blacklisted":'Blacklisted'} </th>
+                        <th>{isEn ? "Add Role":'Ajouter role '}</th>
+                        <th>{isEn ? "Remove Role":'Supprimer role'}</th>
                         <th></th>
                   
                     </tr>
                 </thead>
                 <tbody>
-                    {AllUsers.map((user)=>(
+                    {allUsersNonthis.map((user)=>(
                         <tr key={user.id}>
                             <td>{user.prenom}</td>
                             <td>{user.nom}</td>
@@ -80,16 +90,21 @@ const RemoveroleHandler=(id,role)=>{
                                 )}
                             </td>
                             <td>
-                                {user.isAgence ? (<i className='fas fa-check' style={{color:'green'}}></i>) :(
+                                {AllUserProp && AllUserProp.filter(u=>u.id===user.id) ? (<i className='fas fa-check' style={{color:'green'}}></i>) :(
+                                    <i className='fas fa-times' style={{color:'red'}}></i>
+                                )}
+                            </td>
+                            <td>
+                            {  AllUserBlackListed && AllUserBlackListed.filter(u=>u.id===user.id).length ? (<i className='fas fa-check' style={{color:'green'}}></i>) :(
                                     <i className='fas fa-times' style={{color:'red'}}></i>
                                 )}
                             </td>
                             <td>
                                 <Button variant='primary'  className='btn-sm mx-2 mt-1' onClick={()=>AddroleHandler(user.id,"Admin")}>
-                                Admin
+                                {isEn ? "Admin":"Admin"}
                                 </Button>
                                 <Button variant='primary'  className='btn-sm mx-2 mt-1' onClick={()=>AddroleHandler(user.id,"Proprietaire")}>
-                                Prop
+                                {isEn ? "Owner":'Prop'}
                                 </Button>
                               
                                 <Button variant='dark'  className='btn-sm mx-2 mt-1' onClick={()=>AddroleHandler(user.id,"BlackListed")}>
@@ -101,7 +116,7 @@ const RemoveroleHandler=(id,role)=>{
                                 Admin
                                 </Button>
                                 <Button variant='danger'  className='btn-sm mx-2 mt-1' onClick={()=>RemoveroleHandler(user.id,"Proprietaire")}>
-                                Prop
+                                {isEn ? "Owner":'Prop'}
                                 </Button>
                               
                                 <Button variant='success'  className='btn-sm mx-2 mt-1' onClick={()=>RemoveroleHandler(user.id,"BlackListed")}>
